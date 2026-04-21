@@ -35,6 +35,12 @@ log:
 test:
 	php artisan test
 
+test-e2e:
+	npx playwright test
+
+test-e2e-ui:
+	npx playwright test --ui
+
 test-coverage:
 	XDEBUG_MODE=coverage php artisan test --coverage-html=coverage --coverage-clover=build/logs/clover.xml
 

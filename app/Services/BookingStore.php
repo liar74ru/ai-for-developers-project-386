@@ -123,6 +123,10 @@ class BookingStore
                 if ($end > $endOfWorkday) {
                     break;
                 }
+                if ($current <= $now) {
+                    $current = $end;
+                    continue;
+                }
                 $startIso = $current->format('Y-m-d\TH:i:s\Z');
                 $slots[] = [
                     'startTime'   => $startIso,
