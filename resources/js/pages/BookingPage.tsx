@@ -37,6 +37,7 @@ export function BookingPage() {
   const [guestName, setGuestName] = useState('')
   const [guestEmail, setGuestEmail] = useState('')
   const [calendarMonth, setCalendarMonth] = useState(new Date())
+  const [timeFormat, setTimeFormat] = useState<'12h' | '24h'>('24h')
 
   const stateEventType = location.state?.eventType as EventType | undefined
 
@@ -49,8 +50,8 @@ export function BookingPage() {
   const eventType = stateEventType ?? eventTypesList?.find((e) => e.id === id)
 
   const { data: slots, isLoading: slotsLoading } = useQuery({
-    queryKey: ['slots', id],
-    queryFn: () => guestApi.getSlots(id!),
+    queryKey: ['slots', id, timeFormat],
+    queryFn: () => guestApi.getSlots(id!, timeFormat),
     enabled: !!id,
   })
 
@@ -155,7 +156,7 @@ export function BookingPage() {
               <div className="rounded-md bg-gray-50 p-3">
                 <p className="text-xs text-muted-foreground">Выбранное время</p>
                 <p className="text-sm font-medium text-primary">
-                  {selectedSlot ? format(parseISO(selectedSlot.startTime), 'HH:mm') : '—'}
+                  {selectedSlot ? selectedSlot.displayTime : '—'}
                 </p>
               </div>
             </div>
@@ -257,11 +258,33 @@ export function BookingPage() {
 
             {selectedDate && !slotsLoading && slotsForDate.length > 0 && (
               <>
-                <p className="mb-3 text-sm font-semibold text-gray-900">Статус слотов</p>
+                <div className="mb-3 flex items-center justify-between">
+                  <p className="text-sm font-semibold text-gray-900">Статус слотов</p>
+                  <div className="flex rounded-md border text-xs overflow-hidden">
+                    <button
+                      onClick={() => setTimeFormat('24h')}
+                      className={cn(
+                        'px-2 py-1 transition-colors',
+                        timeFormat === '24h' ? 'bg-gray-900 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
+                      )}
+                    >
+                      24h
+                    </button>
+                    <button
+                      onClick={() => setTimeFormat('12h')}
+                      className={cn(
+                        'px-2 py-1 transition-colors',
+                        timeFormat === '12h' ? 'bg-gray-900 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
+                      )}
+                    >
+                      12h
+                    </button>
+                  </div>
+                </div>
                 <div className="space-y-1.5 mb-4 max-h-48 overflow-y-auto">
                   {slotsForDate.map((slot) => {
-                    const start = format(parseISO(slot.startTime), 'HH:mm')
-                    const end = format(parseISO(slot.endTime), 'HH:mm')
+                    const start = slot.displayTime
+                    const end = format(parseISO(slot.endTime), timeFormat === '12h' ? 'h:mm aa' : 'HH:mm')
                     const isSelected = selectedSlot?.startTime === slot.startTime
 
                     return (
