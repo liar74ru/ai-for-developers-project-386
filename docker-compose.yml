@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: laravel_postgres
+    environment:
+      POSTGRES_DB: laravel
+      POSTGRES_USER: laravel
+      POSTGRES_PASSWORD: laravel
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U laravel"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: local
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: laravel
+      DB_USERNAME: laravel
+      DB_PASSWORD: laravel
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/var/www/html
+      - ./storage:/var/www/html/storage
+    working_dir: /var/www/html
+    entrypoint: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+
+volumes:
+  postgres_data:
