@@ -12,10 +12,11 @@ RUN apt-get update && apt-get install -y \
     unzip \
     postgresql-client \
     libpq-dev \
-    && docker-php-ext-install pdo_pgsql pgsql
+    && docker-php-ext-install pdo_pgsql pgsql \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 COPY composer.lock composer.json ./
-RUN composer install --no-dev --no-interaction --prefer-dist
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
 COPY . .
 
