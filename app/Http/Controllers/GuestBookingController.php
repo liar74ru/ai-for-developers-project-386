@@ -39,8 +39,9 @@ class GuestBookingController
             return response()->json(['message' => 'Время не соответствует доступному слоту'], 400);
         }
 
+        $slotEnd = $startTime->modify("+{$eventType['durationMinutes']} minutes");
         $normalizedStart = $startTime->format('Y-m-d\TH:i:s\Z');
-        if ($this->store->isSlotTaken($normalizedStart)) {
+        if ($this->store->isSlotTaken($startTime, $slotEnd)) {
             return response()->json(['message' => 'Слот уже занят'], 409);
         }
 
