@@ -16,9 +16,12 @@ RUN apt-get update && apt-get install -y \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 COPY composer.lock composer.json ./
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+RUN composer install --no-dev --no-interaction --prefer-dist --no-scripts --no-autoloader
 
 COPY . .
+
+RUN composer dump-autoload --optimize --no-dev \
+    && php artisan package:discover --ansi
 
 RUN chmod -R 755 storage \
     && chmod -R 755 bootstrap/cache
