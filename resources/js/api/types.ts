@@ -16,6 +16,7 @@ export interface Slot {
   endTime: string
   available: boolean
   displayTime: string
+  displayEndTime: string
 }
 
 export interface Booking {

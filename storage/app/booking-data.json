@@ -1,20 +1,50 @@
 {
     "eventTypes": {
-        "befa325e-dbe2-4c5d-a8ae-b61c69ec2ed2": {
-            "id": "befa325e-dbe2-4c5d-a8ae-b61c69ec2ed2",
-            "name": "Консультация",
-            "description": "30-минутная консультация",
+        "test-event-type-uuid": {
+            "id": "test-event-type-uuid",
+            "name": "Встреча 30 минут",
+            "description": "Тестовая встреча для e2e",
             "durationMinutes": 30
+        },
+        "9af65c02-e15b-4b51-9634-7a19233f2ecd": {
+            "id": "9af65c02-e15b-4b51-9634-7a19233f2ecd",
+            "name": "Встреча 15 минут",
+            "description": "",
+            "durationMinutes": 15
         }
     },
     "bookings": {
-        "df10629c-6d48-471d-95cd-79b40ac206ef": {
-            "id": "df10629c-6d48-471d-95cd-79b40ac206ef",
-            "eventTypeId": "befa325e-dbe2-4c5d-a8ae-b61c69ec2ed2",
-            "guestName": "Иван",
-            "guestEmail": null,
+        "2624d91a-d9df-4f41-a1a0-ebcbf4eb5411": {
+            "id": "2624d91a-d9df-4f41-a1a0-ebcbf4eb5411",
+            "eventTypeId": "test-event-type-uuid",
+            "guestName": "Test User",
+            "guestEmail": "test@example.com",
             "startTime": "2026-04-22T09:00:00Z",
-            "createdAt": "2026-04-21T15:42:10Z"
+            "createdAt": "2026-04-22T03:56:02Z"
+        },
+        "faea21a6-ea85-458d-af00-eaca049ac160": {
+            "id": "faea21a6-ea85-458d-af00-eaca049ac160",
+            "eventTypeId": "test-event-type-uuid",
+            "guestName": "Вс",
+            "guestEmail": null,
+            "startTime": "2026-04-22T09:30:00Z",
+            "createdAt": "2026-04-22T03:56:24Z"
+        },
+        "1b64f720-925c-44b5-850d-c5539822e486": {
+            "id": "1b64f720-925c-44b5-850d-c5539822e486",
+            "eventTypeId": "9af65c02-e15b-4b51-9634-7a19233f2ecd",
+            "guestName": null,
+            "guestEmail": null,
+            "startTime": "2026-04-23T09:30:00Z",
+            "createdAt": "2026-04-22T04:15:17Z"
+        },
+        "f05d883c-8ee4-4382-bdf1-a957b4f88cac": {
+            "id": "f05d883c-8ee4-4382-bdf1-a957b4f88cac",
+            "eventTypeId": "test-event-type-uuid",
+            "guestName": null,
+            "guestEmail": null,
+            "startTime": "2026-04-22T12:00:00Z",
+            "createdAt": "2026-04-22T04:15:54Z"
         }
     }
 }

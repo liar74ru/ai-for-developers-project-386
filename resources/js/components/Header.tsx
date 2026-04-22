@@ -10,9 +10,9 @@ export function Header() {
           Calendar
         </Link>
         <nav className="flex items-center gap-6 text-sm font-medium text-gray-600">
-          <a href="/#event-types" className="hover:text-gray-900 transition-colors">
+          <Link to="/booking" className="hover:text-gray-900 transition-colors">
             Записаться
-          </a>
+          </Link>
           <Link to="/admin" className="hover:text-gray-900 transition-colors">
             Админка
           </Link>

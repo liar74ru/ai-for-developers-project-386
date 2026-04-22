@@ -62,7 +62,7 @@ class AdminEventTypeController
         if (empty($data['name'])) {
             return 'Поле name обязательно';
         }
-        if (!isset($data['description'])) {
+        if (!array_key_exists('description', $data)) {
             return 'Поле description обязательно';
         }
         if (empty($data['durationMinutes']) || (int) $data['durationMinutes'] <= 0) {

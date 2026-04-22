@@ -73,6 +73,14 @@ export function BookingPage() {
     return set
   }, [slotsByDate])
 
+  const availableSlotCountByDate = useMemo(() => {
+    const counts: Record<string, number> = {}
+    Object.entries(slotsByDate).forEach(([date, daySlots]) => {
+      counts[date] = daySlots.filter((s) => s.available).length
+    })
+    return counts
+  }, [slotsByDate])
+
   const slotsForDate = selectedDate
     ? (slotsByDate[format(selectedDate, 'yyyy-MM-dd')] ?? [])
     : []
@@ -219,7 +227,7 @@ export function BookingPage() {
                       setSelectedSlot(null)
                     }}
                     className={cn(
-                      'rounded-md py-1.5 text-sm transition-colors',
+                      'flex flex-col items-center rounded-md py-1 text-sm transition-colors',
                       isSelected && 'bg-gray-900 text-white font-semibold',
                       !isSelected && clickable && 'hover:bg-orange-50 text-gray-900 cursor-pointer',
                       !isSelected && isToday && 'ring-1 ring-primary',
@@ -227,7 +235,12 @@ export function BookingPage() {
                       !clickable && !isSelected && isCurrentMonth && 'text-gray-300 cursor-default',
                     )}
                   >
-                    {format(day, 'd')}
+                    <span>{format(day, 'd')}</span>
+                    {clickable && availableSlotCountByDate[key] > 0 && (
+                      <span className={cn('text-[10px] leading-none mt-0.5', isSelected ? 'text-white/70' : 'text-green-600')}>
+                        {availableSlotCountByDate[key]}
+                      </span>
+                    )}
                   </button>
                 )
               })}
@@ -284,7 +297,7 @@ export function BookingPage() {
                 <div className="space-y-1.5 mb-4 max-h-48 overflow-y-auto">
                   {slotsForDate.map((slot) => {
                     const start = slot.displayTime
-                    const end = format(parseISO(slot.endTime), timeFormat === '12h' ? 'h:mm aa' : 'HH:mm')
+                    const end = slot.displayEndTime
                     const isSelected = selectedSlot?.startTime === slot.startTime
 
                     return (

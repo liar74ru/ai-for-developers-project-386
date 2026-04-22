@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { Header } from '@/components/Header'
 import { EventTypeCard } from '@/components/EventTypeCard'
@@ -6,10 +7,19 @@ import { Button } from '@/components/ui/button'
 import { guestApi } from '@/api/guest'
 
 export function GuestEventTypesPage() {
+  const navigate = useNavigate()
   const { data: eventTypes, isLoading, isError } = useQuery({
     queryKey: ['guest-event-types'],
     queryFn: guestApi.getEventTypes,
   })
+
+  function handleBookClick() {
+    if (eventTypes?.length === 1) {
+      navigate(`/book/${eventTypes[0].id}`, { state: { eventType: eventTypes[0] } })
+    } else {
+      document.getElementById('event-types')?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -25,10 +35,8 @@ export function GuestEventTypesPage() {
           <p className="mt-3 text-lg text-gray-600">
             Выберите тип события и удобное время для встречи.
           </p>
-          <Button className="mt-6" asChild>
-            <a href="#event-types">
-              Записаться <ArrowRight className="h-4 w-4" />
-            </a>
+          <Button className="mt-6" onClick={handleBookClick} disabled={isLoading}>
+            Записаться <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
       </section>

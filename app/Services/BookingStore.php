@@ -32,7 +32,7 @@ class BookingStore
         $record = [
             'id'              => (string) Str::uuid(),
             'name'            => $input['name'],
-            'description'     => $input['description'],
+            'description'     => $input['description'] ?? '',
             'durationMinutes' => (int) $input['durationMinutes'],
         ];
         $this->data['eventTypes'][$record['id']] = $record;
@@ -48,7 +48,7 @@ class BookingStore
         $this->data['eventTypes'][$id] = [
             'id'              => $id,
             'name'            => $input['name'],
-            'description'     => $input['description'],
+            'description'     => $input['description'] ?? '',
             'durationMinutes' => (int) $input['durationMinutes'],
         ];
         $this->save();
@@ -94,10 +94,15 @@ class BookingStore
         return $record;
     }
 
-    public function isSlotTaken(string $startTime): bool
+    public function isSlotTaken(\DateTimeImmutable $slotStart, \DateTimeImmutable $slotEnd): bool
     {
         foreach ($this->data['bookings'] as $b) {
-            if ($b['startTime'] === $startTime) {
+            $bookStart = new \DateTimeImmutable($b['startTime']);
+            $eventType = $this->data['eventTypes'][$b['eventTypeId']] ?? null;
+            $duration  = $eventType ? (int) $eventType['durationMinutes'] : 0;
+            $bookEnd   = $bookStart->modify("+{$duration} minutes");
+
+            if ($slotStart < $bookEnd && $slotEnd > $bookStart) {
                 return true;
             }
         }
@@ -129,10 +134,11 @@ class BookingStore
                 }
                 $startIso = $current->format('Y-m-d\TH:i:s\Z');
                 $slots[] = [
-                    'startTime'   => $startIso,
-                    'endTime'     => $end->format('Y-m-d\TH:i:s\Z'),
-                    'available'   => !$this->isSlotTaken($startIso),
-                    'displayTime' => $this->formatDisplayTime($current, $timeFormat),
+                    'startTime'      => $startIso,
+                    'endTime'        => $end->format('Y-m-d\TH:i:s\Z'),
+                    'available'      => !$this->isSlotTaken($current, $end),
+                    'displayTime'    => $this->formatDisplayTime($current, $timeFormat),
+                    'displayEndTime' => $this->formatDisplayTime($end, $timeFormat),
                 ];
                 $current = $end;
             }
