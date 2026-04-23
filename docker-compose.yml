@@ -27,6 +27,8 @@ services:
       - "8000:8000"
     environment:
       APP_ENV: local
+      APP_KEY: base64:ov2gOQtKgwSjbk0ezNX8gJK92D6UijErpItt4lhAHQM=
+      SESSION_DRIVER: file
       DB_HOST: postgres
       DB_PORT: 5432
       DB_DATABASE: laravel
