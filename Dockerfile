@@ -32,6 +32,12 @@ RUN composer dump-autoload --optimize --no-dev \
 RUN chmod -R 755 storage \
     && chmod -R 755 bootstrap/cache
 
+ENV APP_KEY=base64:ov2gOQtKgwSjbk0ezNX8gJK92D6UijErpItt4lhAHQM=
+ENV SESSION_DRIVER=file
+
 EXPOSE ${PORT:-8000}
+
+HEALTHCHECK --interval=5s --timeout=5s --start-period=30s --retries=5 \
+    CMD curl -f http://localhost:${PORT:-8000}/up || exit 1
 
 CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
