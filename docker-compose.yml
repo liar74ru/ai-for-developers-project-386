@@ -40,6 +40,12 @@ services:
       - ./storage:/var/www/html/storage
     working_dir: /var/www/html
     entrypoint: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
 volumes:
   postgres_data:
